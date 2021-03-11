@@ -3,6 +3,8 @@ const bodyParser =  require('body-parser')
 const mongoose   = require('mongoose')
 const app        = express()
 const PORT       = process.env.PORT || 5000
+// Router and Controllers
+const authRoutes = require('./routes/authRoutes.js')
 // Application Configuration
 app.use(bodyParser.urlencoded({extended : true}))
 app.use(bodyParser.json())
@@ -20,3 +22,6 @@ mongoose.connect(dbUri, {
     .catch(err=>{
         console.log(err)
     })
+
+// Routing
+app.use(authRoutes)
