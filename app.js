@@ -1,27 +1,30 @@
-const express    = require('express')
-const bodyParser =  require('body-parser')
-const mongoose   = require('mongoose')
-const app        = express()
-const PORT       = process.env.PORT || 5000
-// Router and Controllers
-const authRoutes = require('./routes/authRoutes.js')
+const express       = require('express')
+const bodyParser    = require('body-parser')
+const cookieParser  = require('cookie-parser')
+const mongoose      = require('mongoose')
+const PORT          = process.env.PORT || 5000
+
+// App 
+const app = express()
+
 // Application Configuration
-app.use(bodyParser.urlencoded({extended : true}))
-app.use(bodyParser.json())
+app.use(express.urlencoded())
+app.use(express.json())
 app.use(express.static('public'))
 app.set('view engine', 'ejs')
+app.use(cookieParser())
+
+// Router and Controllers
+const authRoutes = require('./routes/authRoutes.js')
+app.use(authRoutes)
+
+
 // Database Connection
-const dbUri = 'mongodb://localhost:27017/test'
+const dbUri = 'mongodb+srv://root:root@shopping.kw3lr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 mongoose.connect(dbUri, {
     useNewUrlParser : true,
     useUnifiedTopology : true,
     useCreateIndex : true
-    }).then(result => app.listen(PORT, ()=>{
-        console.log(`app listening at port number ${PORT}`)
-    }))
-    .catch(err=>{
-        console.log(err)
-    })
-
-// Routing
-app.use(authRoutes)
+    }).then(app.listen(PORT, ()=>{ console.log(`app listening at port number ${PORT}`) }))
+    .catch(err=>{  console.log(err) })
+    
