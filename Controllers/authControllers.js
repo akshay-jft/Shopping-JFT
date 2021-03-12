@@ -21,7 +21,7 @@ module.exports.signup_post = async (req,res)=>{
        const user =  await User.create({ email, password })
        const token = createToken(user._id)
        res.cookie('jwt', token, { httpOnly : true, maxAge : maxAge * 1000})
-       res.status(201).json(user)
+       res.redirect('/home')
     }catch(err) {
         res.status(404).json(err)
     }
@@ -31,8 +31,15 @@ module.exports.login_post = async (req,res)=>{
     const { email, password } = req.body
     try{
         const user = await User.login(email,password)
-        res.status(200).json({ user : user._id})
+        const token = createToken(user._id)
+        res.cookie('jwt', token, { httpOnly : true, maxAge : maxAge * 1000})
+        res.redirect('/home')
     }catch(err){
-        res.status(400).json({})
+        res.status(400).json({err : err.message})
     }
+}
+
+module.exports.logout_get = async(req,res)=>{
+    res.cookie('jwt', { maxAge : 1})
+    res.redirect('/login')
 }

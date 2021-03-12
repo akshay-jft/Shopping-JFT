@@ -8,7 +8,7 @@ const PORT          = process.env.PORT || 5000
 const app = express()
 
 // Application Configuration
-app.use(express.urlencoded())
+app.use(express.urlencoded({ extended : true}))
 app.use(express.json())
 app.use(express.static('public'))
 app.set('view engine', 'ejs')
@@ -16,7 +16,9 @@ app.use(cookieParser())
 
 // Router and Controllers
 const authRoutes = require('./routes/authRoutes.js')
+const homeRoutes = require('./routes/homeRoutes.js')
 app.use(authRoutes)
+app.use(homeRoutes)
 
 
 // Database Connection
